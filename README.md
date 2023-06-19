@@ -1,4 +1,4 @@
-# Title of Your Final Project Here 
+# Shaking Out Data 
 ## INFO 201 "Foundational Skills for Data Science" — Winter 2023
 
 Authors: Nikola Cumic, Brian Chiang, Bonie Wang, Xinying Wang
