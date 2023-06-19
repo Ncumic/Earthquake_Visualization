@@ -18,12 +18,12 @@ source("Summary.R")
 
 
 server <- function(input, output) {
-  # NIKOLA SECTION
+  # SECTION_1
 
   world_data_shape <- map_data("world")
 
 
-  output$Nikola_Plot <- renderPlotly({
+  output$Plot_Magnitude <- renderPlotly({
 
 
     earthquake_data_modified <- earthquake_data_modified %>% filter(magnitude >= input$Variables[1] & magnitude <= input$Variables[2])
@@ -46,22 +46,23 @@ server <- function(input, output) {
   })
 
   
-  #Bonie SECTION
+  # SECTION_2
   
-  output$BonieChart <- renderPlotly({
+  output$Plot_Accuracy <- renderPlotly({
     filtered_data <- CountryAccuracy %>% 
       filter(country %in% c(input$country1, input$country2))
     
-    plot <- ggplot(filtered_data, aes(x = Year, y = mean_accuracy, color = country)) +
+    Accuracy_plot <- ggplot(filtered_data, aes(x = Year, y = mean_accuracy, color = country)) +
       # geom_line() +
       geom_smooth(se=FALSE) +
-      labs(x = "Year", y = "Mean Accuracy", title = "Comparison of Estimation Accuracy of different countries") +
+      labs(x = "Year", y = "Mean Accuracy", title = "Estimation accuracy in different countries") +
       theme(plot.title = element_text(hjust = 0.5))
     
-    plotly::ggplotly(plot)
+    return(Accuracy_plot)
   })
 
-  # BRIAN SECTION
+  # SECTION_3
+
   eq_df <- read.csv("https://raw.githubusercontent.com/info-201b-sp23/exploratory-analysis-Ncumic/main/earthquake_data.csv",
                     stringsAsFactors = FALSE)
   output$plot <- renderPlotly({
@@ -76,9 +77,9 @@ server <- function(input, output) {
       geom_point(data = filter(filtered_eq_df, tsunami == 0), aes(x = longitude, y = latitude, color = "Non-Tsunami"), size = 2) +
       geom_point(data = filter(filtered_eq_df, tsunami == 1), aes(x = longitude, y = latitude, color = "Tsunami"), size = 2) +
       labs(title = paste("Earthquakes That Caused Tsunamis in", input$country), x = "Longitude", y = "Latitude") +
-      scale_color_manual(values = c("Non-Tsunami" = "blue", "Tsunami" = "red"),
+      scale_color_manual(values = c("Non-Tsunami" = "red", "Tsunami" = "blue"),
                          labels = c("Non-Tsunami", "Tsunami"),
-                         name = "Tsunami")
+                         name = "Earthquake Type")
 
     return (world_plot)
   })
