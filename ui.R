@@ -1,3 +1,4 @@
+# Required packages
 library(shiny)
 library(ggplot2)
 library(plotly)
@@ -5,12 +6,14 @@ library(dplyr)
 library(bslib)
 library(rsconnect)
 library(maps)
+source("Summary.R")
 
+# MODIFYING DATA
 earthquake_data <- read.csv('https://raw.githubusercontent.com/info-201b-sp23/exploratory-analysis-Ncumic/main/earthquake_data.csv')
 earthquake_data_modified <- select(earthquake_data, -c("title","net", "nst", "dmin", "gap", "magType", "depth"))
-source("Summary.R")
 earthquake_data_modified$Year <- as.integer(format(as.POSIXct(earthquake_data_modified$date, format = "%d-%m-%Y %H:%M"), "%Y"))
-# DEFAULT THEME WE CAN USE
+
+# THEME SET
 Viz_theme <- bs_theme(
   bg = "#0b3d91", # background color
   fg = "white", # foreground color
@@ -20,9 +23,9 @@ Viz_theme <- bs_theme(
 Viz_theme <- bs_theme_update(Viz_theme, bootswatch = "journal")
 
 Title <- h1("Earthquake Data Work", align = "center")
-# WE WILL ADD OUR INDIVIDUAL UI STUFF HERE
 
-# NIKOLA_SECTION
+
+# 1_SECTION
 Nikola_Plot_Description <- p("This is a world map of all magnitudes of earthquakes and their location. It helps people understand
                               where a majority of earthquakes take place and where certain magnitudes are more commen then others. This can help dispel
                               fear related to earthquakes while keeping people informed of the dangers.")
@@ -36,11 +39,10 @@ Nikola_Widget <- sliderInput(inputId = "Variables",
 )
 
 Nikola_Plot <- mainPanel(
-  # Make plot interactive
   plotlyOutput(outputId = "Nikola_Plot")
 )
 
-NIKOLA_TAB <- tabPanel("Magnitude VIZ",
+Magnitude_TAB <- tabPanel("Magnitude VIZ",
                        sidebarLayout(
                          sidebarPanel(
                            # ADD WIDGET HERE
@@ -89,9 +91,9 @@ INTRO_Tab <- tabPanel("INTRODUCTION",
                       p("To minimize the impact of these restrictions, we cleaned up the dataset before doing the visualizations. All the NA values are removed to ensure the accuracy of the results to the utmost extent. "),
 )
 
-# BONIE_SECTION
+# 2_SECTION
 
-Bonie_TAB <- tabPanel(
+Accuracy_TAB <- tabPanel(
   "Accuracy VIZ",
   sidebarLayout(
     sidebarPanel(
@@ -113,18 +115,18 @@ Bonie_TAB <- tabPanel(
   )
 )
 
-# BRIAN SECTION
+# 3_SECTION
 eq_df <- read.csv("https://raw.githubusercontent.com/info-201b-sp23/exploratory-analysis-Ncumic/main/earthquake_data.csv",
                   stringsAsFactors = FALSE)
-Brian_Plot_Description <- p("This is a world map of all earthquakes around the world, what this Vizualization does is
+Third_Plot_Description <- p("This is a world map of all earthquakes around the world, what this Vizualization does is
 inform people of which of these earthquakes caused water related accidents like tsunamis. This helps people understand where these forms of
 earthquakes happen and where certain measures should be taken to lessen the damage")
-BRIAN_TAB <- tabPanel(
+Tsunami_TAB <- tabPanel(
   "Tsunamis VIZ",
   sidebarLayout(
     sidebarPanel(
       selectInput("country", "Select a Country:", choices = unique(eq_df$country)),
-      Brian_Plot_Description
+      Third_Plot_Description
     ),
     mainPanel(
       plotlyOutput("plot")
@@ -137,8 +139,8 @@ ui <- navbarPage(
   theme = Viz_theme,
   titlePanel(Title),
   INTRO_Tab,
-  NIKOLA_TAB,
-  Bonie_TAB,
-  BRIAN_TAB,
+  Magnitude_TAB,
+  Accuracy_TAB,
+  Tsunami_TAB,
   SUMMARY_Tab
 )
