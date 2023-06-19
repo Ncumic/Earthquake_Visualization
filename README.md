@@ -3,7 +3,7 @@
 
 Authors: Nikola Cumic
 
-**Link: https://ncumic.shinyapps.io/final-project-ncumic/**
+**Link: https://ncumic.shinyapps.io/earthquake_visualizations/**
 
 # Introduction
 
